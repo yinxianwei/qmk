@@ -27,17 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* in python2: list(u"whatever".encode('utf-16-le')) */
 /*   at most 32 characters or the ugly hack in usb_main.c borks */
 #define MANUFACTURER LUANTY
-#define PRODUCT Candy BLE
+#define PRODUCT YXW
 #define DESCRIPTION QMK based keyboard
 
-#define BLE_NUS_MIN_INTERVAL 30
+#define BLE_NUS_MIN_INTERVAL 50
 #define BLE_NUS_MAX_INTERVAL 60
-#define BLE_HID_MAX_INTERVAL 60
-#define BLE_HID_SLAVE_LATENCY 50
+#define BLE_HID_MAX_INTERVAL 80
+#define BLE_HID_SLAVE_LATENCY 3
 
 /* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 12
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 4
 
 #define DIODE_DIRECTION COL2ROW
 
@@ -57,8 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) \
 )
 #define ENCODER_ENABLE
-// #define DIP_SWITCH_ENABLE //look this
-// #define OS_CYCLE          //look this
 
 // #define WPM_ENABLE
 

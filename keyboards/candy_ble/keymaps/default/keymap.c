@@ -25,11 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef WPM_ENABLE
   #include "wpm.h"
 #endif
-#include "eeprom.h"
-#include "string.h"
-#include "eeconfig.h"
-#include "action.h"
-#include "usbd.h"
 
 const uint8_t is_master = IS_LEFT_HAND;
 
@@ -38,10 +33,6 @@ const uint8_t is_master = IS_LEFT_HAND;
 //Following line allows macro to read current RGB settings
 extern rgblight_config_t rgblight_config;
 void nrfmicro_power_enable(bool enable);
-#endif
-
-#ifdef OS_CYCLE
-uint8_t current_os=0;
 #endif
 
 enum custom_keycodes {
@@ -70,10 +61,7 @@ enum custom_keycodes {
 
     RGBRST,
     RGBTOG,
-    CST_MVP,
-    PRINTER,
-    OS_SWITCH,
-    VOLUP
+    CST_MVP
 };
 
 enum { TO_SETTINGS=0 };
@@ -97,14 +85,16 @@ void dance_layer_TO_SETTINGS(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 3) {  // TAP THREE TIMES TO ENTER SETTINGS
         layer_on(_SETTINGS);
         reset_tap_dance (state);
-    } else
+    }
+    else
     {
     	register_code (KC_GRV);
     }
 }
 void dance_layer_TO_SETTINGS_RESET(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 3) {  // TAP THREE TIMES TO ENTER SETTINGS
-    } else
+    }
+    else
     {
     	unregister_code (KC_GRV);
     }
@@ -115,40 +105,11 @@ qk_tap_dance_action_t tap_dance_actions[] = {[TO_SETTINGS] = ACTION_TAP_DANCE_FN
 // define keymaps
 const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE]=LAYOUT(
-    KC_ESC, PRINTER, OS_SWITCH, VOLUP, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC, 
-    KC_CAPS, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_ENT, KC_MUTE, 
-    KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_UP, 
-    MO(_EXTRA), KC_LGUI, KC_SPC, KC_LEFT, KC_DOWN, KC_RGHT),
-
-    [_EXTRA]=LAYOUT(
-    TD(TO_SETTINGS), KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_BSLS, 
-    KC_TAB, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, KC_SCLN, KC_QUOT, XXXXXXX, XXXXXXX, 
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_SLSH, KC_VOLU, 
-    _______, KC_LCTL, KC_LALT, KC_MINS, KC_VOLD, KC_EQL),
-
-    [_SETTINGS]=LAYOUT(
-    TO(_BASE), XXXXXXX, XXXXXXX, XXXXXXX, TO(_RGB_SETTINGS), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, TO(_SYSTEM_SETTINGS), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(_BLE_SETTINGS), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX),
-
-    [_SYSTEM_SETTINGS]=LAYOUT(
-    TO(_BASE), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, ENT_SLP, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, ENT_DFU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX),
-
-    [_BLE_SETTINGS]=LAYOUT(
-    TO(_BASE), ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, TOG_HID, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DELBNDS, 
-    XXXXXXX, DEL_ID0, DEL_ID1, DEL_ID2, DEL_ID3, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, AD_WO_L, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX),
-
-    [_RGB_SETTINGS]=LAYOUT(
-    TO(_BASE), XXXXXXX, XXXXXXX, RGBRST, XXXXXXX, RGB_TOG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_MOD, XXXXXXX, XXXXXXX, RGB_VAI, 
-    XXXXXXX, KC_LCTL, KC_LALT, RGB_SAD, RGB_VAD, RGB_SAI)
+    MO(_EXTRA),   KC_PSLS,      KC_PAST,      KC_PMNS,
+    KC_7,         KC_8,         KC_9,         KC_PPLS,
+    KC_4,         KC_5,         KC_6,         _______,
+    KC_1,         KC_2,         KC_3,         KC_PENT,
+    KC_0,         _______,      KC_PDOT,      _______)
 };
 
 #ifndef TAPPING_TERM_PER_KEY
@@ -296,91 +257,57 @@ const char *read_wpm(void) {
 char rgb_state_str[24];
 const char *read_rgb_state(void)
 {
-  snprintf(rgb_state_str, sizeof(rgb_state_str), "LIGHT %s MODE: %d",
+    snprintf(rgb_state_str, sizeof(rgb_state_str), "LIGHT %s MODE: %d",
     rgblight_config.enable ? "ON " : "OFF", rgblight_config.mode);
-  return rgb_state_str;
+    return rgb_state_str;
 }
 #endif
 
 char mod_shift_win_str[24];
 const char *read_shift_win_state(void)
 {
-  snprintf(mod_shift_win_str, sizeof(mod_shift_win_str), "%s %s",
-    get_mods() & MOD_BIT(KC_LSHIFT)? "]^" : "  ",
-    get_mods() & MOD_BIT(KC_LGUI)? "\\" : " " );
-  return mod_shift_win_str; 
+      snprintf(mod_shift_win_str, sizeof(mod_shift_win_str), "%s %s",
+        get_mods() & MOD_BIT(KC_LSHIFT)? "]^" : "  ",
+        get_mods() & MOD_BIT(KC_LGUI)? "\\" : " " );
+    return mod_shift_win_str; 
 }
 
 char mod_ctrl_alt_str[24];
 const char *read_ctrl_alt_state(void)
 {
-  snprintf(mod_ctrl_alt_str, sizeof(mod_ctrl_alt_str), "%s %s",
-    get_mods() & MOD_BIT(KC_LCTL)? "_" : " ",
-    get_mods() & MOD_BIT(KC_LALT)? "{" : " " );
-  return mod_ctrl_alt_str; 
+      snprintf(mod_ctrl_alt_str, sizeof(mod_ctrl_alt_str), "%s %s",
+        get_mods() & MOD_BIT(KC_LCTL)? "_" : " ",
+        get_mods() & MOD_BIT(KC_LALT)? "{" : " " );
+    return mod_ctrl_alt_str; 
 }
 
 char version_str[24];
 const char *read_version(void)
 {
-  snprintf(version_str, sizeof(version_str), "VER 0510 EEPROM");
-  return version_str; 
+      snprintf(version_str, sizeof(version_str), "VER 0510 NOEE");
+    return version_str; 
 }
 
-//caps lock state not working
 
+/*
 char caps_lock_state[24];
 const char *read_caps_lock_state(void)
 {
   uint8_t leds = host_keyboard_leds();
   snprintf(caps_lock_state, sizeof(caps_lock_state), "CL:%s",
-    (leds & (1 << USB_LED_CAPS_LOCK)) ? "1" : "0");
+           (leds & (1 << USB_LED_CAPS_LOCK)) ? "1" : "0");
   return caps_lock_state;
 }
-
-char battery_charging_state[24];
-const char *read_battery_charging_state(void)
-{
-  // if (nrfx_power_usbstatus_get() != NRFX_POWER_USB_STATE_CONNECTED ||
-  //     nrfx_power_usbstatus_get() != NRFX_POWER_USB_STATE_READY) {
-  //   snprintf(battery_charging_state, sizeof(battery_charging_state), "NO USB");
-  //   return battery_charging_state;
-  // }
-  uint8_t value=nrf_gpio_pin_read(SWITCH_PIN);
-  if(!value){ //switch not open
-     snprintf(battery_charging_state, sizeof(battery_charging_state), "CHECK SWITCH");
-     return battery_charging_state;
-  }
-  if(nrf_gpio_pin_read(PIN12)){ // high: charged
-    snprintf(battery_charging_state, sizeof(battery_charging_state), "CHARGE DONE");
-  }else{
-    snprintf(battery_charging_state, sizeof(battery_charging_state), "CHARGING");
-  }
-  return battery_charging_state; 
-}
-
+*/
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch(keycode)
   {
-    static bool caps_state=0;
-    case KC_CAPS:
-    if (record->event.pressed) {
-      if(caps_state){
-        caps_state=!caps_state;
-        nrf_gpio_pin_clear(LED_PIN);
-      }
-      else{
-        caps_state=!caps_state;
-        nrf_gpio_pin_set(LED_PIN);
-      }
-    }
-    break;
     case RGBRST:
       #ifdef RGBLIGHT_ENABLE
         if (record->event.pressed) {
-          nrfmicro_power_enable(true);
+          // nrfmicro_power_enable(true);
           eeconfig_update_rgblight_default();
           rgblight_enable();
           // RGB_current_mode = rgblight_config.mode;
@@ -388,56 +315,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       #endif
       break;
-    
-    case RGB_TOG:
+    case RGBTOG:
       #ifdef RGBLIGHT_ENABLE
         if (record->event.pressed) {
-          if(rgblight_config.enable) {
-            nrfmicro_power_enable(false);
-            // eeconfig_update_rgblight_default();
-            // rgblight_enable();
+          if(!rgblight_config.enable) {
+            eeconfig_update_rgblight_default();
+            rgblight_enable();
           }
           else{
-            nrfmicro_power_enable(true);
-            // rgblight_disable();
+            rgblight_disable();
           }
         }
       #endif
-      break;
-    #ifdef OS_CYCLE
-    case PRINTER:
-        if (record->event.pressed) {
-          current_os=eeconfig_read_os();
-          if(current_os==0){
-            register_code(KC_0);
-            unregister_code(KC_0);
-          }else{
-            register_code(KC_1);
-            unregister_code(KC_1);
-          }
-        }
-      break;
-    #endif    
-    #ifdef OS_CYCLE
-    case OS_SWITCH:
-
-        if (record->event.pressed) {
-          current_os=eeconfig_read_os();
-          if(current_os==0){
-            current_os=1;
-            eeconfig_update_os(current_os);
-          }else{
-            current_os=0;
-            eeconfig_update_os(current_os);
-          }
-        }
-      break;
-      #endif
-    case VOLUP:
-        if (record->event.pressed) {
-        	register_code(KC_VOLU);
-        	unregister_code(KC_VOLU);
-        }
       break;
   }
   if (record->event.pressed) {
@@ -447,7 +336,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       update_wpm(keycode);
       set_wpm();
     #endif
-    // eeprom_write_dword(EECONFIG_RGBLIGHT, 666);`
   }
   switch (keycode) {
   default:
@@ -477,11 +365,10 @@ void matrix_render_user(struct CharacterMatrix *matrix) {
         #ifdef WPM_ENABLE
           matrix_write_ln(matrix, read_wpm());
         #endif
-        // matrix_write_ln(matrix,read_shift_win_state());
-        // matrix_write(matrix,read_ctrl_alt_state());
-        // matrix_write_ln(matrix,read_battery_charging_state());
+        matrix_write_ln(matrix,read_shift_win_state());
+        matrix_write(matrix,read_ctrl_alt_state());
         //others:
-        matrix_write(matrix,read_caps_lock_state());   
+        // matrix_write(matrix,read_caps_lock_state());   
         // matrix_write_ln(matrix, read_keylog());
         // matrix_write_ln(matrix, read_keylogs());
         //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
@@ -502,6 +389,7 @@ void matrix_render_user(struct CharacterMatrix *matrix) {
         break;
       case _SYSTEM_SETTINGS:
         matrix_write_ln(matrix, ",- =>          [ESC");
+        // matrix_write_ln(matrix, "P: SLEEP");
         matrix_write_ln(matrix, "B: ENTER BOOT");
         matrix_write_ln(matrix, read_version());
       break;
@@ -536,54 +424,19 @@ void iota_gfx_task_user(void) {
 
 #endif
 
-//Media keys WORKS
+//Media keys not working, don't know why
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
   switch(biton32(layer_state))
   {
     case _BASE:
       if(clockwise){
-        // register_code(KC_C);
-        // unregister_code(KC_C);
-        // tap_code(KC_S);
-        register_code(KC_AUDIO_VOL_DOWN);
-        wait_ms(10);
-        unregister_code(KC_AUDIO_VOL_DOWN);
-        // SEND_STRING(SS_LGUI("c"));
+        register_code(KC_SLCK);
+        unregister_code(KC_SLCK);
       }
       else{
-        // register_code(KC_PAUS);
-        // unregister_code(KC_PAUS);
-        // register_code(action.key.code);
-
-        // action_t action;
-        // action.code = ACTION_USAGE_CONSUMER(KEYCODE2CONSUMER(KC_AUDIO_VOL_DOWN));
-        // register_code(action.key.code);
-        // unregister_code(action.key.code);
-        // tap_code(KC_VOLU);
-        // tap_code(KC_VOLU);
-
-        //   action_t action;
-        // action.code = ACTION_KEY(KC_A);
-        // register_code(action.key.code);
-        // unregister_code(action.key.code);
-
-        register_code(KC_AUDIO_VOL_UP);
-        wait_ms(10);
-        unregister_code(KC_AUDIO_VOL_UP);
-        // usbd_send_consumer(KEYCODE2CONSUMER(KC_AUDIO_VOL_DOWN));
-
-
-        // tap_code(0xA9);
-        // SEND_STRING(SS_TAP(X_AUDIO_VOL_DOWN));
-        // action_t action;
-        // action.code = ACTION_USAGE_CONSUMER(KEYCODE2CONSUMER(KC_AUDIO_VOL_DOWN));
-        // register_code(action.usage.code);
-        // unregister_code(action.usage.code);
-        // host_consumer_send((KEYCODE2CONSUMER(KC_AUDIO_VOL_DOWN)));
-        // SEND_STRING("VE"SS_TAP(X_AUDIO_VOL_DOWN)"LO");
-
-        // SEND_STRING(SS_LGUI("v"));
+        register_code(KC_PAUS);
+        unregister_code(KC_PAUS);
       }
       break;
     case _EXTRA:
@@ -626,39 +479,3 @@ void encoder_update_user(uint8_t index, bool clockwise) {
   }
 }
 #endif
-
-#ifdef DIP_SWITCH_ENABLE
-void dip_switch_update_user(uint8_t index, bool active) { 
-        switch (index) {
-        case 0:
-            if(active) { nrf_gpio_pin_set(LED_PIN); } else { nrf_gpio_pin_clear(LED_PIN); }
-            break;
-    }
-}
-#endif
-
-
-// void led_set_user(uint8_t usb_led) {
-//     if (usb_led & (1 << USB_LED_CAPS_LOCK)) {
-//         // PORTB &= ~(1 << 2);
-//         nrf_gpio_pin_set(LED_PIN);
-//     } else {
-//         // PORTB |= (1 << 2);
-//         nrf_gpio_pin_clear(LED_PIN);
-//     }
-
-//     // led_set_user(usb_led);
-// }
-
-
-// void led_set_kb(uint8_t usb_led) {
-//   // put your keyboard LED indicator (ex: Caps Lock LED) toggling code here
-//   if (IS_LED_ON(usb_led, USB_LED_CAPS_LOCK)) {
-//     nrf_gpio_pin_set(LED_PIN);
-//   } else {
-//     nrf_gpio_pin_clear(LED_PIN);
-//   }
-
-//   led_set_user(usb_led);
-// }
-

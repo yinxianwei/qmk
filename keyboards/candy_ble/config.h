@@ -56,9 +56,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define IS_COMMAND() ( \
     keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) \
 )
-#define ENCODER_ENABLE
+// #define ENCODER_ENABLE
 
-// #define WPM_ENABLE
+#define WPM_ENABLE
 
 #define PROGMEM // arm-gcc does not interpret PROGMEM
 #define RGB_DI_PIN PIN15 // The pin the LED strip is connected to

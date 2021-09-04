@@ -7,7 +7,7 @@ NRFSDK_ROOT := $(NRFSDK15_ROOT) #Path to nRF SDK v15.0.0
 # project specific files
 #SRC =	matrix.c
 SRC += ssd1306.c
-SRC += encoder.c
+# SRC += encoder.c
 SRC += wpm.c
 
 TAP_DANCE_ENABLE=yes

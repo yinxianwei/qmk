@@ -58,7 +58,7 @@ uint16_t get_vcc() {
   // we're using pin AIN2 with 10K/13K pulldown so we have to adjust the voltage a little bit
   // charged shows 2456mV so we scale that up to 4200mV
   // 2.37V (at 4.2V) to 1.36 (at 2.4V).
-  return ((uint32_t)adc_buffer[0]*6*600/255) * 4200 / 2456;
+  return ((uint32_t)adc_buffer[0]*6*600/255) * 4200 / 776;
 }
 
 

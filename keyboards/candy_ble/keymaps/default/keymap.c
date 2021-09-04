@@ -109,7 +109,13 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_7,         KC_8,         KC_9,         KC_PPLS,
     KC_4,         KC_5,         KC_6,         _______,
     KC_1,         KC_2,         KC_3,         KC_PENT,
-    KC_0,         _______,      KC_PDOT,      _______)
+    KC_0,         _______,      KC_PDOT,      _______),
+    [_EXTRA]=LAYOUT(
+    XXXXXXX,      TOG_HID,      ENT_SLP,      ENT_DFU,
+    DELBNDS,      BATT_LV,      XXXXXXX,      XXXXXXX,
+    XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,
+    XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,
+    XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX)
 };
 
 #ifndef TAPPING_TERM_PER_KEY

@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 )
 // #define ENCODER_ENABLE
 
-#define WPM_ENABLE
+// #define WPM_ENABLE
 
 #define PROGMEM // arm-gcc does not interpret PROGMEM
 #define RGB_DI_PIN PIN15 // The pin the LED strip is connected to
